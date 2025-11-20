@@ -19,7 +19,9 @@ def evaluate_model(model, X_test, y_test):
     return {"accuracy": acc, "report": report, "confusion_matrix": cm, "preds": preds}
 
 def save_model(model, scaler, columns, path_model="model.joblib"):
-    """ IMPORTANT: Now includes columns """
+    """
+    Save model + scaler + column order
+    """
     joblib.dump({
         "model": model,
         "scaler": scaler,
@@ -31,6 +33,14 @@ def load_model(path_model="model.joblib"):
     return data["model"], data["scaler"], data["columns"]
 
 def predict(model, scaler, X_raw):
-    X_scaled = scaler.transform(X_raw)
+    """
+    Predict using trained model.
+    If scaler exists, apply scaling.
+    """
+    if scaler is not None:
+        X_scaled = scaler.transform(X_raw)
+    else:
+        X_scaled = X_raw
+
     preds = model.predict(X_scaled)
     return preds
